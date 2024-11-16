@@ -7,6 +7,9 @@ from django.shortcuts import render
 from tortoise import Tortoise, fields, models, run_async
 from .db import db_init
 
+import asyncio
+asyncio.run(db_init())
+
 def VCreateTask(request):
     db_init()
     if request.method == 'POST':
@@ -37,8 +40,6 @@ def VCreateContact(request):
     Tortoise.close_connections()
     return render(request, 'create_contact.html',context=cont_form)
 def MainPage(request):
-    db_init()
-    # Tortoise.get_connection()
     FindTitle = ''
     if request.method == 'POST':
         if request.POST.get('btn_find')=='new_find':
@@ -53,14 +54,17 @@ def MainPage(request):
         #     Tasks.objects.get(id=id_del).delete()
 
     tasks_lst = Tasks.filter(title__icontains=FindTitle)
+    print(tasks_lst)
     count_tasks = tasks_lst.count()
+    print(tasks_lst,count_tasks)
+
     if count_tasks == 0:
         PageStr = 'Нет задач соответствующих условиям'
     elif count_tasks > 0:
         PageStr = f'Количество задач = {count_tasks}'
     info_main = {'PageTitle': PageStr, 'tasks_list': tasks_lst,
                  'count_tasks': count_tasks, 'FindTitle': FindTitle}
-    Tortoise.close_connections()
+
     return render(request, 'main.html', context=info_main)
 def PageContacts(request):
     FindTitle = ''
