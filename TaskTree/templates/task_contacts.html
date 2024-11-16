@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>task_contacts</title>
+</head>
+<body>
+    <a href="/">Главная</a>
+    <h2> Данные по задаче: {{ task_title }} </h2>
+    <h4> Старт: {{ task_start }} Завершение: {{ task_end }}</h4>
+    <p></p>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <input type="text" id="FindTitle" name="FindTitle" maxlength="50" value="{{FindTitle}}">
+            <button type="submit" name="btn_find_tsklink" value="+">Найти в прикрепленных контактах</button>
+        </div>
+    </form>
+    {% if count_link_tasks > 0 %}
+        <form method="post">
+        {% csrf_token %}
+            <div>
+            <p>Прикрепленные контакты и роли, по условиям поиска</p>
+            {% for linktask in list_link_task %}
+                <div>
+                    <button name="btn_unlink" type="submit" value="{{linktask.list_id}}">
+                        -x-
+                    </button>
+                      <label for="contact_role>{{linktask.list_id}}">Роль</label>
+                      <select name="contact_role>{{linktask.list_id}}" id="contact_role>{{linktask.list_id}}">
+                        <option value="">-- Выберите роль контакта --</option>
+                        <option value="executor"
+                                {% if linktask.role == "executor" %}
+                                    selected
+                                {% endif %}
+                        >Исполнитель</option>
+                        <option value="target"
+                                {% if linktask.role == "target" %}
+                                    selected
+                                {% endif %}
+                        >Цель задачи</option>
+                        <option value="controle"
+                                {% if linktask.role == "controle" %}
+                                    selected
+                                {% endif %}
+
+                        >Контролер</option>
+                        <option value="chief"
+                                {% if linktask.role == "chief" %}
+                                    selected
+                                {% endif %}
+                        >Руководитель</option>
+                      </select>
+                    <button name="btn_role" id="btn_role" type="submit" value="{{linktask.list_id}}">
+                        U
+                    </button>
+                    <a href="card_contact/{{ contact.id }}/">   {{linktask.last_name}} {{linktask.first_name}} {{linktask.second_name}} </a>
+                    <p>_________________________________________</p>
+                </div>
+            {% endfor%}
+            </div>
+        </form>
+    {% else %}
+        <h3> С этой задачей пока не связано контактов, соответствующих условиям поиска </h3>
+    {% endif %}
+    <p>_____________</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" id="FindTitleUnlink" name="FindTitleUnlink" maxlength="50" value="{{FindTitleUnlink}}">
+        <button type="submit" name="btn_find_unlink" value="+">Найти в несвязанных задачах</button>
+    </form>
+    {% if count_unlink_tasks > 0 %}
+        <h3>Список контактов (допускается многократноеприкрепление контакта к задаче)</h3>
+
+        <form method="post">
+        {% csrf_token %}
+        <div>
+            {% for linktask in notlist_link_task %}
+                <div>
+                    <button name="btn_link" type="submit" value="{{linktask.id}}">
+                        -->
+                    </button>
+                    <a> {{linktask.last_name}} {{linktask.first_name}} {{linktask.second_name}} </a>
+                </div>
+            {% endfor%}
+        </div>
+        </form>
+    {% else %}
+        <h3> С этой задачей невозможно связать контакты, соответствующих условиям поиска </h3>
+    {% endif %}
+</body>
+</html>
