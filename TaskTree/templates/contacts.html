@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+</head>
+<body>
+    <a href="/">Главная</a> <a>|</a>
+    <a href="/addcontact/">Создать контакт</a>
+    <h3> {{ PageTitle }} </h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" id="FindTitle" name="FindTitle" maxlength="50" value="{{ FindTitle }}">
+        <button type="submit" name="btn_find" value="new_find">Найти по фамилии</button>
+    </form>
+    {% if count_contacts > 0 %}
+        <form method="post">
+        {% csrf_token %}
+        {% for contact in contacts_lst %}
+            <div>
+                <button type="submit" name="btn_del" value="{{contact.id}}">-x-</button><a> | </a>
+                <a href="card_contact/{{ contact.id }}/">{{ contact.last_name }} {{ contact.first_name }} {{ contact.second_name }}</a>
+            </div>
+        {% endfor %}
+        </form>
+    {% endif %}
+
+</body>
+</html>

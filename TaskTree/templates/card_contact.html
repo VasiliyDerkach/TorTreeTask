@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>card_contact</title>
+</head>
+<body>
+    <a href="/">Главная</a> <a>|</a>
+    <form method="post">
+        {% csrf_token %}
+        <label for="last_name">Фамилия</label>
+        <input type="text" name="last_name" id="last_name" value = {{ contact.last_name }} >
+        <label for="first_name">Имя</label>
+        <input type="text" name="first_name" id="first_name" value = {{ contact.first_name }} >
+        <label for="second_name">Отчество</label>
+        <input type="text" name="second_name" id="second_name" value = {{ contact.second_name }} >
+        <button name="btn_ok" type="submit">Сохранить</button>
+    </form>
+
+</body>
+</html>

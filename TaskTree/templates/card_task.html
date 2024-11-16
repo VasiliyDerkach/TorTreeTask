@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>card_task</title>
+</head>
+<body>
+    <a href="/">Главная</a>
+    <h2> Данные по задаче: {{ task_title }} </h2>
+    <h4> Старт: {{ task_start }} Завершение: {{ task_end }}</h4>
+    <p></p>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <input type="text" id="FindTitle" name="FindTitle" maxlength="50" value="{{FindTitle}}">
+            <button type="submit" name="btn_find_tsklink" value="+">Найти в исх.задачах</button>
+        </div>
+    </form>
+    {% if count_link_tasks > 0 %}
+        <form method="post">
+        {% csrf_token %}
+            <div>
+            <p>Исходящие задачи</p>
+            {% for linktask in list_link_task %}
+                <div>
+                    <button name="btn_unlink" type="submit" value="{{linktask.id}}">
+                        -x-
+                    </button>
+                    <a> {{linktask.title}} </a>
+                </div>
+            {% endfor%}
+            </div>
+        </form>
+    {% else %}
+        <h3> С этой задачей пока не связано других задач, соответствующих условиям поиска </h3>
+    {% endif %}
+    <p>_____________</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" id="FindTitleUnlink" name="FindTitleUnlink" maxlength="50" value="{{FindTitleUnlink}}">
+        <button type="submit" name="btn_find_unlink" value="+">Найти в несвязанных задачах</button>
+    </form>
+    {% if count_unlink_tasks > 0 %}
+        <h3>Список несвязанных задач</h3>
+
+        <form method="post">
+        {% csrf_token %}
+        <div>
+            {% for linktask in notlist_link_task %}
+                <div>
+                    <button name="btn_link" type="submit" value="{{linktask.id}}">
+                        -->
+                    </button>
+                    <a> {{linktask.title}} </a>
+                </div>
+            {% endfor%}
+        </div>
+        </form>
+    {% else %}
+        <h3> С этой задачей пока невозможно связать других задач, соответствующих условиям поиска </h3>
+    {% endif %}
+</body>
+</html>

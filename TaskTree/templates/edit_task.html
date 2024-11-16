@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>edit_task</title>
+</head>
+<body>
+    <a href="/">Главная</a> <a>|</a>
+    <h3>Редактирование для {{ task.title }}</h3>
+    <a>Даты {{ task.start }} / {{ task.end }}</a>
+
+    <form method="post">
+        {% csrf_token %}
+        <p>Заголовок задачи</p>
+        <textarea name="task_title" id="task_title">{{ task.title }}</textarea>
+        <label for="start">Дата начала</label>
+        <input type="date" name="start" id="start" value = {{ task.start }} >
+        <label for="date_end">Дата завершения</label>
+        <input type="date" name="date_end" id="date_end" value = {{ task.end }}>
+        <button name="btn_ok" type="submit">Сохранить</button>
+    </form>
+
+</body>
+</html>
