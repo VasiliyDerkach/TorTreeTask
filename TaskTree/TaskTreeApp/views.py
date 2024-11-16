@@ -51,10 +51,10 @@ async def MainPage(request):
         if id_del:
             await Tasks.get(id=id_del).delete()
 
-    tasks_lst = await Tasks.filter(title__icontains=FindTitle)
-    print('tasks_lst=',tasks_lst)
-    count_tasks = tasks_lst.count('id')
-    print(tasks_lst,count_tasks)
+    tasks_lst = await Tasks.filter(title__icontains=FindTitle).values()
+    # print('tasks_lst=',tasks_lst)
+    count_tasks = len(tasks_lst)
+    # print(tasks_lst,count_tasks)
 
     if count_tasks == 0:
         PageStr = 'Нет задач соответствующих условиям'
@@ -74,8 +74,8 @@ async def PageContacts(request):
         if id_del:
             await Contacts.get(id=id_del).delete()
 
-    contacts_lst = await Contacts.filter(last_name__icontains=FindTitle)
-    count_contacts = contacts_lst.count('id')
+    contacts_lst = await Contacts.filter(last_name__icontains=FindTitle).values()
+    count_contacts = len(contacts_lst)
     if count_contacts == 0:
         PageStr = 'Нет контактов, соответствующих поиску'
     elif count_contacts > 0:
@@ -98,7 +98,7 @@ async def VCardContact(request, contact_id):
 
 async def VEditTask(request, task_id):
 
-    GTask = await Tasks.filter(id=task_id))
+    GTask = await Tasks.filter(id=task_id).values()
     # print(FTask)
     if request.method == 'POST':
         await GTask.update(title = request.POST.get('task_title'),
@@ -112,7 +112,7 @@ async def VEditTask(request, task_id):
     return render(request, 'edit_task.html', context={'task': FTask})
 
 async def VCardTask(request, task_id):
-    find_task = await Tasks.filter(id=task_id)
+    find_task = await Tasks.filter(id=task_id).values()
     count_link_tasks = 0
     count_unlink_tasks = 0
     FindTitleUnLink = ''
@@ -124,8 +124,8 @@ async def VCardTask(request, task_id):
         vtask_start = lst_field_task['start']
         vtask_end = lst_field_task['end']
         vtask_id = str(lst_field_task['id'])
-        link_task = await Univers_list.filter(id_out=vtask_id)
-        count_fulllink_task = link_task.count('id')
+        link_task = await Univers_list.filter(id_out=vtask_id).values()
+        count_fulllink_task = len(link_task)
         if request.method == 'POST':
             btn_find_unlink = request.POST.get('btn_find_unlink')
             if btn_find_unlink:
@@ -136,17 +136,17 @@ async def VCardTask(request, task_id):
                 # print('FindTitle=',FindTitle)
 
         if count_fulllink_task>0:
-            list_link_task = await Univers_list.filter(id_out=vtask_id)
+            list_link_task = await Univers_list.filter(id_out=vtask_id).values()
             lst_link_idin = [str(lst.id_in) for lst in list_link_task]
             # print('lst_link_idin=',lst_link_idin)
-            flist_link_task = await Tasks.filter(title__icontains=FindTitle, id__in=lst_link_idin)
+            flist_link_task = await Tasks.filter(title__icontains=FindTitle, id__in=lst_link_idin).values()
             # print(flist_link_task)
-            notlist_link_task = await Tasks.exclude(id__in=lst_link_idin).exclude(id=vtask_id).filter(title__icontains=FindTitleUnLink)
-            count_link_tasks = flist_link_task.count()
+            notlist_link_task = await Tasks.exclude(id__in=lst_link_idin).exclude(id=vtask_id).filter(title__icontains=FindTitleUnLink).values()
+            count_link_tasks = len(flist_link_task)
         else:
             flist_link_task = None
-            notlist_link_task = await Tasks.exclude(id=vtask_id).filter(title__icontains=FindTitleUnLink)
-        count_unlink_tasks = notlist_link_task.count('id')
+            notlist_link_task = await Tasks.exclude(id=vtask_id).filter(title__icontains=FindTitleUnLink).values()
+        count_unlink_tasks = len(notlist_link_task)
         if request.method == 'POST':
             btn_unlink = request.POST.get('btn_unlink')
             if btn_unlink:
@@ -154,7 +154,7 @@ async def VCardTask(request, task_id):
             btn_link = request.POST.get('btn_link')
             if btn_link:
                 # print(btn_link,vtask_id)
-                lu = await Univers_list.filter(id_in=btn_link, id_out=vtask_id, role='arrow')
+                lu = await Univers_list.filter(id_in=btn_link, id_out=vtask_id, role='arrow').values()
                 if lu:
                     return HttpResponse("Задачи уже связаны")
                 else:
@@ -176,7 +176,7 @@ async def VCardTask(request, task_id):
     await Tortoise.close_connections()
     return render(request,'card_task.html',context=info_task)
 async def VContactsTask(request, task_id):
-    find_task = await Tasks.filter(id=task_id)
+    find_task = await Tasks.filter(id=task_id).values()
     count_link_tasks = 0
     count_unlink_tasks = 0
     FindTitleUnLink = ''
@@ -188,8 +188,8 @@ async def VContactsTask(request, task_id):
         vtask_start = lst_field_task['start']
         vtask_end = lst_field_task['end']
         vtask_id = str(lst_field_task['id'])
-        link_task = await Univers_list.filter(id_out=vtask_id)
-        count_fulllink_task = link_task.count('id')
+        link_task = await Univers_list.filter(id_out=vtask_id).values()
+        count_fulllink_task = len(link_task)
         if request.method == 'POST':
             btn_find_unlink = request.POST.get('btn_find_unlink')
             if btn_find_unlink:
@@ -200,15 +200,15 @@ async def VContactsTask(request, task_id):
                 # print('FindTitle=',FindTitle)
 
         if count_fulllink_task>0:
-            list_link_task = await Univers_list.filter(id_out=vtask_id)
+            list_link_task = await Univers_list.filter(id_out=vtask_id).values()
             lst_link_idin = [str(lst.id_in) for lst in list_link_task]
             # print('lst_link_idin=',lst_link_idin)
-            flist_link_task = await Contacts.filter(last_name__icontains=FindTitle, id__in=lst_link_idin)
+            flist_link_task = await Contacts.filter(last_name__icontains=FindTitle, id__in=lst_link_idin).values()
             # print(flist_link_task)
-            count_link_tasks = flist_link_task.count('id')
+            count_link_tasks = len(flist_link_task)
 
             for idin in list_link_task:
-                cnt = await Contacts.filter(id=idin['id_in'])
+                cnt = await Contacts.filter(id=idin['id_in']).values()
                 if cnt:
                     elem = idin
                     elem['list_id'] = idin['id']
@@ -218,8 +218,8 @@ async def VContactsTask(request, task_id):
 
         else:
             flist_link_task = None
-        notlist_link_task = await Contacts.filter(last_name__icontains=FindTitleUnLink)
-        count_unlink_tasks = notlist_link_task.count('id')
+        notlist_link_task = await Contacts.filter(last_name__icontains=FindTitleUnLink).values()
+        count_unlink_tasks = len(notlist_link_task)
         if request.method == 'POST':
             btn_unlink = request.POST.get('btn_unlink')
             if btn_unlink:
