@@ -23,7 +23,7 @@ async def VCreateTask(request):
             await Tasks.create(title=title, start=task_start, end=task_end)
     else:
         form = CreateTask()
-    # Tortoise.close_connections()
+    await Tortoise.close_connections()
     cont_form={'form': form}
     return render(request, 'create_contact.html',context=cont_form)
 # Create your views here.
@@ -39,7 +39,7 @@ async def VCreateContact(request):
     else:
         form = CreateContact()
     cont_form={'form': form}
-    # Tortoise.close_connections()
+    await Tortoise.close_connections()
     return render(request, 'create_contact.html',context=cont_form)
 async def MainPage(request):
     FindTitle = ''
@@ -50,10 +50,6 @@ async def MainPage(request):
         # print(id_del)
         if id_del:
             await Tasks.get(id=id_del).delete()
-        # id_edit = request.POST.get('btn_del')
-        # # print(id_del)
-        # if id_edit:
-        #     Tasks.objects.get(id=id_del).delete()
 
     tasks_lst = await Tasks.filter(title__icontains=FindTitle)
     print('tasks_lst=',tasks_lst)
@@ -66,7 +62,7 @@ async def MainPage(request):
         PageStr = f'Количество задач = {count_tasks}'
     info_main = {'PageTitle': PageStr, 'tasks_list': tasks_lst,
                  'count_tasks': count_tasks, 'FindTitle': FindTitle}
-
+    await Tortoise.close_connections()
     return render(request, 'main.html', context=info_main)
 async def PageContacts(request):
     FindTitle = ''
@@ -86,6 +82,7 @@ async def PageContacts(request):
         PageStr = f'Количество контактов = {count_contacts}'
     info_main = {'PageTitle': PageStr, 'contacts_lst': contacts_lst,
                  'count_contacts': count_contacts, 'FindTitle': FindTitle}
+    await Tortoise.close_connections()
     return render(request, 'contacts.html', context=info_main)
 async def VCardContact(request, contact_id):
 
@@ -96,6 +93,7 @@ async def VCardContact(request, contact_id):
         VContact.first_name = request.POST.get('first_name')
         VContact.second_name = request.POST.get('second_name')
         await VContact.save()
+    await Tortoise.close_connections()
     return render(request, 'card_contact.html', context={'contact': VContact})
 
 async def VEditTask(request, task_id):
@@ -110,10 +108,11 @@ async def VEditTask(request, task_id):
     FTask = GTask[0]
     FTask['start'] = FTask['start'].strftime('%Y-%m-%d')
     FTask['end'] = FTask['end'].strftime('%Y-%m-%d')
+    await Tortoise.close_connections()
     return render(request, 'edit_task.html', context={'task': FTask})
 
 async def VCardTask(request, task_id):
-    find_task = await Tasks.objects.filter(id=task_id)
+    find_task = await Tasks.filter(id=task_id)
     count_link_tasks = 0
     count_unlink_tasks = 0
     FindTitleUnLink = ''
@@ -174,6 +173,7 @@ async def VCardTask(request, task_id):
                  'notlist_link_task': notlist_link_task, 'FindTitleUnLink': FindTitleUnLink,
                  'FindTitle': FindTitle,
                  'count_link_tasks': count_link_tasks,'count_unlink_tasks': count_unlink_tasks}
+    await Tortoise.close_connections()
     return render(request,'card_task.html',context=info_task)
 async def VContactsTask(request, task_id):
     find_task = await Tasks.filter(id=task_id)
@@ -234,8 +234,9 @@ async def VContactsTask(request, task_id):
                 vrole = ''
 
             if btn_link:
-                    await Univers_list.objects.create(id_in=btn_link, id_out=vtask_id, num_in_link=0, role=vrole)
+                    await Univers_list.create(id_in=btn_link, id_out=vtask_id, num_in_link=0, role=vrole)
     else:
+        await Tortoise.close_connections()
         return HttpResponse("Задача не найдена")
 
     info_task = {'task_id': vtask_id, 'task_title': vtask_title, 'task_start':vtask_start,
@@ -243,6 +244,7 @@ async def VContactsTask(request, task_id):
                  'notlist_link_task': notlist_link_task, 'FindTitleUnLink': FindTitleUnLink,
                  'FindTitle': FindTitle,
                  'count_link_tasks': count_link_tasks,'count_unlink_tasks': count_unlink_tasks}
+    await Tortoise.close_connections()
     return render(request,'task_contacts.html',context=info_task)
 
 # if __name__=='__main__':
