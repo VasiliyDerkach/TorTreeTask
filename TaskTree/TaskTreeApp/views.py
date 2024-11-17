@@ -227,7 +227,7 @@ async def VContactsTask(request, task_id):
             btn_link = request.POST.get('btn_link')
             btn_role = request.POST.get('btn_role')
             if btn_role:
-                # print(vrole)
+                #  print(vrole)
                 vrole = request.POST.get(f"contact_role>{btn_role}")
                 await Univers_list.filter(id=btn_role).update(role=vrole)
             else:
