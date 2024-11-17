@@ -1,18 +1,14 @@
 """
-URL configuration for TaskTree project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Модуль urls.py для обработки URL приложения TaskTreeApp
+Назначение URL для представлений:
+- addtask/ - добавление новой задачи в таблицу Tasks,
+- addcontact/ -добавление нового контакта в таблицу Contacts,
+- card_task/ - страница редактирования связей задачи с Tasks.id=task_id с другими задачами,
+- edit_task/ - редактирование полей задачи с Tasks.id=task_id,
+- '' - главная страница со списком задач из таблицы Tasks и операций с задачами,
+- contacts/ - страница со списком контактов из таблицы Contacts и операций с контактами,
+- task_contacts/ - страница редактирования связей задачи с Tasks.id=task_id с контактами,
+- contacts/card_contact/ - страница редактирования полей контакта с Contacts.id=contact_id.
 """
 from django.contrib import admin
 from django.urls import path
