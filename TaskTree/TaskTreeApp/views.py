@@ -223,9 +223,10 @@ async def VCardTask(request, task_id):
                 if lu:
                     return HttpResponse("Задачи уже связаны")
                 else:
-                    max_indx = await (Univers_list.filter(id_out=vtask_id, role='arrow').annotate(max_s=Max("num_in_link")).values('max_s')
+                    max_indx = await Univers_list.filter(id_out=vtask_id, role='arrow').annotate(max_s=Max("num_in_link")).values('max_s')
+                    max_indx_int = max_indx[0]['max_s']
 
-                    max_indx_int = max_indx['num_in_link__max']
+                    # print(max_indx)
                     if not max_indx_int:
                         max_indx_int = 0
                     max_indx_int += 1
