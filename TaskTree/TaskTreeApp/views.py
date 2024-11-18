@@ -222,9 +222,11 @@ async def VCardTask(request, task_id):
             btn_find_unlink = request.POST.get('btn_find_unlink')
             if btn_find_unlink:
                 FindTitleUnLink = request.POST.get('FindTitleUnlink')
+                btn_find_unlink = None
             btn_find_tlink = request.POST.get('btn_find_tsklink')
             if btn_find_tlink:
                 FindTitle = request.POST.get('FindTitle')
+                btn_find_tlink = None
                 # print('FindTitle=',FindTitle)
 
         if count_fulllink_task>0:
@@ -245,6 +247,7 @@ async def VCardTask(request, task_id):
             if btn_unlink:
                 DULst = await Univers_list.get_or_none(id_in=btn_unlink, id_out=vtask_id)
                 await DULst.delete()
+                btn_unlink = None
             btn_link = request.POST.get('btn_link')
             if btn_link:
                 # print(btn_link,vtask_id)
@@ -261,6 +264,7 @@ async def VCardTask(request, task_id):
                     max_indx_int += 1
                     # print(max_indx)
                     await Univers_list.create(id_in=btn_link, id_out=vtask_id, num_in_link=max_indx_int, role='arrow')
+                btn_link =None
     else:
         return HttpResponse("Задача не найдена")
 
@@ -290,9 +294,11 @@ async def VContactsTask(request, task_id):
             btn_find_unlink = request.POST.get('btn_find_unlink')
             if btn_find_unlink:
                 FindTitleUnLink = request.POST.get('FindTitleUnlink')
+                btn_find_unlink = None
             btn_find_tlink = request.POST.get('btn_find_tsklink')
             if btn_find_tlink:
                 FindTitle = request.POST.get('FindTitle')
+                btn_find_tlink = None
                 # print('FindTitle=',FindTitle)
 
         if count_fulllink_task>0:
@@ -321,6 +327,7 @@ async def VContactsTask(request, task_id):
             if btn_unlink:
                 DULst = await Univers_list.get_or_none(id=btn_unlink)
                 await DULst.delete()
+                btn_unlink = None
             btn_link = request.POST.get('btn_link')
             btn_role = request.POST.get('btn_role')
             if btn_role:
@@ -330,12 +337,14 @@ async def VContactsTask(request, task_id):
                 # print(UUlst.id)
                 UUlst.role=vrole
                 await UUlst.save()
+                btn_role = None
                 # await UUlst.update(role=vrole)
             else:
                 vrole = ''
 
             if btn_link:
                     await Univers_list.create(id_in=btn_link, id_out=vtask_id, num_in_link=0, role=vrole)
+                    btn_link = None
     else:
         await Tortoise.close_connections()
         return HttpResponse("Задача не найдена")
