@@ -69,6 +69,7 @@ from .forms import *
 from .models import *
 from django.shortcuts import render
 from tortoise import Tortoise, fields, models, run_async
+from tortoise.functions import *
 from .db import db_init
 import asyncio
 
@@ -222,7 +223,8 @@ async def VCardTask(request, task_id):
                 if lu:
                     return HttpResponse("Задачи уже связаны")
                 else:
-                    max_indx = await Univers_list.filter(id_out=vtask_id, role='arrow').aggregate(Max('num_in_link'))
+                    max_indx = await (Univers_list.filter(id_out=vtask_id, role='arrow').annotate(max_s=Max("num_in_link")).values('max_s')
+
                     max_indx_int = max_indx['num_in_link__max']
                     if not max_indx_int:
                         max_indx_int = 0
