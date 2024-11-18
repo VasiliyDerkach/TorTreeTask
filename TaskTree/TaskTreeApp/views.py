@@ -110,7 +110,8 @@ async def MainPage(request):
         id_del = request.POST.get('btn_del')
         # print(id_del)
         if id_del:
-            await Tasks.get(id=id_del).delete()
+            DTsk = await Tasks.get(id=id_del)
+            await DTsk.delete()
 
     tasks_lst = await Tasks.filter(title__icontains=FindTitle).values()
     # print('tasks_lst=',tasks_lst)
@@ -133,7 +134,8 @@ async def PageContacts(request):
         id_del = request.POST.get('btn_del')
         # print(id_del)
         if id_del:
-            await Contacts.get(id=id_del).delete()
+            DCnt = await Contacts.get(id=id_del)
+            await DCnt.delete()
 
     contacts_lst = await Contacts.filter(last_name__icontains=FindTitle).values()
     count_contacts = len(contacts_lst)
@@ -211,7 +213,8 @@ async def VCardTask(request, task_id):
         if request.method == 'POST':
             btn_unlink = request.POST.get('btn_unlink')
             if btn_unlink:
-                await Univers_list.filter(id_in=btn_unlink,id_out=vtask_id).delete()
+                DULst = await Univers_list.filter(id_in=btn_unlink,id_out=vtask_id)
+                await DULst.delete()
             btn_link = request.POST.get('btn_link')
             if btn_link:
                 # print(btn_link,vtask_id)
@@ -284,7 +287,8 @@ async def VContactsTask(request, task_id):
         if request.method == 'POST':
             btn_unlink = request.POST.get('btn_unlink')
             if btn_unlink:
-                await Univers_list.filter(id=btn_unlink).delete()
+                DULst = await Univers_list.filter(id=btn_unlink)
+                await DULst.delete()
             btn_link = request.POST.get('btn_link')
             btn_role = request.POST.get('btn_role')
             if btn_role:
