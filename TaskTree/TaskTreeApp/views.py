@@ -166,9 +166,13 @@ async def VEditTask(request, task_id):
     GTask = GTask0.values()
     # print(FTask)
     if request.method == 'POST':
-        await GTask0.update(title = request.POST.get('task_title'),
-        start = request.POST.get('start'),
-        end = request.POST.get('date_end'))
+        # await GTask0.update(title = request.POST.get('task_title'),
+        # start = request.POST.get('start'),
+        # end = request.POST.get('date_end'))
+        GTask0.title = request.POST.get('task_title')
+        GTask0.start = request.POST.get('start')
+        GTask0.end = request.POST.get('date_end')
+        await GTask0.save()
         # print(request.POST.get('task_title'),request.POST.get('start'),request.POST.get('date_end'))
     FTask = GTask[0]
     FTask['start'] = FTask['start'].strftime('%Y-%m-%d')
@@ -270,7 +274,7 @@ async def VContactsTask(request, task_id):
 
         if count_fulllink_task>0:
             list_link_task = await Univers_list.filter(id_out=vtask_id).values()
-            lst_link_idin = [str(lst.id_in) for lst in list_link_task]
+            lst_link_idin = [lst['id_in'] for lst in list_link_task]
             # print('lst_link_idin=',lst_link_idin)
             flist_link_task = await Contacts.filter(last_name__icontains=FindTitle, id__in=lst_link_idin).values()
             # print(flist_link_task)
@@ -297,9 +301,13 @@ async def VContactsTask(request, task_id):
             btn_link = request.POST.get('btn_link')
             btn_role = request.POST.get('btn_role')
             if btn_role:
-                #  print(vrole)
                 vrole = request.POST.get(f"contact_role>{btn_role}")
-                await Univers_list.get_or_none(id=btn_role).update(role=vrole)
+                # print(vrole)
+                UUlst = await Univers_list.get_or_none(id=btn_role)
+                # print(UUlst.id)
+                UUlst.role=vrole
+                await UUlst.save()
+                # await UUlst.update(role=vrole)
             else:
                 vrole = ''
 
