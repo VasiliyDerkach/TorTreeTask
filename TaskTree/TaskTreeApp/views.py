@@ -201,7 +201,8 @@ async def VCardTask(request, task_id):
 
         if count_fulllink_task>0:
             list_link_task = await Univers_list.filter(id_out=vtask_id).values()
-            lst_link_idin = [str(lst.id_in) for lst in list_link_task]
+            print('list_link_task=',list_link_task)
+            lst_link_idin = [str(lst['id_in']) for lst in list_link_task]
             # print('lst_link_idin=',lst_link_idin)
             flist_link_task = await Tasks.filter(title__icontains=FindTitle, id__in=lst_link_idin).values()
             # print(flist_link_task)
