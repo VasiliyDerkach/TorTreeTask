@@ -70,8 +70,7 @@ from django.utils.datetime_safe import datetime
 from .forms import *
 from .models import *
 from django.shortcuts import render
-from tortoise import Tortoise, fields, models, run_async
-from tortoise.functions import *
+from tortoise import Tortoise
 from .db import db_init
 import asyncio
 
@@ -117,10 +116,8 @@ async def MainPage(request):
             await DTsk.delete()
 
     tasks_lst = await Tasks.filter(title__icontains=FindTitle).values()
-    # print('tasks_lst=',tasks_lst)
+    tasks_lst1 = await Tasks.all()
     count_tasks = len(tasks_lst)
-    # print(tasks_lst,count_tasks)
-
     if count_tasks == 0:
         PageStr = 'Нет задач соответствующих условиям'
     elif count_tasks > 0:
@@ -177,16 +174,15 @@ async def VEditTask(request, task_id):
         GTask0.title = request.POST.get('task_title')
         dates = request.POST.get('start')
         # print('dates=',dates)
-        if dates=='':
-            GTask0.start = datetime.date('0000-00-00').strftime('%Y-%m-%d')
-
-        else:
+        try:
             GTask0.start = dates
+        except:
+            GTask0.start = None
         datee = request.POST.get('date_end')
-        if datee=='':
-            GTask0.end = datetime.date('0000-00-00').strftime('%Y-%m-%d')
-        else:
-            GTask0.end = dates
+        try:
+            GTask0.end = datee
+        except:
+            GTask0.end = None
         await GTask0.save()
         # print(request.POST.get('task_title'),request.POST.get('start'),request.POST.get('date_end'))
     FTask = GTask[0]

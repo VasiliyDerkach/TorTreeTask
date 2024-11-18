@@ -28,7 +28,7 @@
 """
 import uuid
 # from django.db import models
-from tortoise import Tortoise, fields,  run_async
+from tortoise import fields
 from tortoise.models import Model
 from .db import db_init
 # Create your models here.
