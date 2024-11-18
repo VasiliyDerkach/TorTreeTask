@@ -178,17 +178,28 @@ async def VEditTask(request, task_id):
             GTask0.start = dates
         except:
             GTask0.start = None
+        if GTask0.start=='':
+            GTask0.start = None
         datee = request.POST.get('date_end')
         try:
             GTask0.end = datee
         except:
             GTask0.end = None
+        if GTask0.end=='':
+            GTask0.end = None
+        print('date',GTask0.start,GTask0.end)
         await GTask0.save()
         # print(request.POST.get('task_title'),request.POST.get('start'),request.POST.get('date_end'))
     FTask = GTask[0]
-    FTask['start'] = datetime.date(FTask['start']).strftime('%Y-%m-%d')
-    # print('type(FTask["start"])=',type(FTask['start']))
-    FTask['end'] = datetime.date(FTask['end']).strftime('%Y-%m-%d')
+    try:
+        FTask['start'] = datetime.date(FTask['start']).strftime('%Y-%m-%d')
+    except:
+        FTask['start'] = None
+        # print('type(FTask["start"])=',type(FTask['start']))
+    try:
+        FTask['end'] = datetime.date(FTask['end']).strftime('%Y-%m-%d')
+    except:
+        FTask['end'] = None
     await Tortoise.close_connections()
     return render(request, 'edit_task.html', context={'task': FTask})
 
