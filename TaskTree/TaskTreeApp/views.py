@@ -65,6 +65,8 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.utils.datetime_safe import datetime
+
 from .forms import *
 from .models import *
 from django.shortcuts import render
@@ -163,20 +165,34 @@ async def VCardContact(request, contact_id):
 async def VEditTask(request, task_id):
 
     GTask0 = await Tasks.get(id=task_id)
-    GTask = GTask0.values()
+    print('GTask0=',GTask0)
+    GTask = await Tasks.filter(id=task_id).values()
+    print('GTask=', GTask)
     # print(FTask)
     if request.method == 'POST':
         # await GTask0.update(title = request.POST.get('task_title'),
         # start = request.POST.get('start'),
         # end = request.POST.get('date_end'))
+
         GTask0.title = request.POST.get('task_title')
-        GTask0.start = request.POST.get('start')
-        GTask0.end = request.POST.get('date_end')
+        dates = request.POST.get('start')
+        # print('dates=',dates)
+        if dates=='':
+            GTask0.start = datetime.date('0000-00-00').strftime('%Y-%m-%d')
+
+        else:
+            GTask0.start = dates
+        datee = request.POST.get('date_end')
+        if datee=='':
+            GTask0.end = datetime.date('0000-00-00').strftime('%Y-%m-%d')
+        else:
+            GTask0.end = dates
         await GTask0.save()
         # print(request.POST.get('task_title'),request.POST.get('start'),request.POST.get('date_end'))
     FTask = GTask[0]
-    FTask['start'] = FTask['start'].strftime('%Y-%m-%d')
-    FTask['end'] = FTask['end'].strftime('%Y-%m-%d')
+    FTask['start'] = datetime.date(FTask['start']).strftime('%Y-%m-%d')
+    # print('type(FTask["start"])=',type(FTask['start']))
+    FTask['end'] = datetime.date(FTask['end']).strftime('%Y-%m-%d')
     await Tortoise.close_connections()
     return render(request, 'edit_task.html', context={'task': FTask})
 
