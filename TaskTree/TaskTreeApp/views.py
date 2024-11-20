@@ -71,6 +71,7 @@ from .forms import *
 from .models import *
 from django.shortcuts import render
 from tortoise import Tortoise
+from tortoise.functions import Max
 from .db import db_init
 import asyncio
 
@@ -133,10 +134,12 @@ async def MainPage(request):
         if id_del:
             DTsk = await Tasks.get_or_none(id=id_del)
             await DTsk.delete()
-            DUlst = await Univers_list.get_or_none(id_in=id_del)
-            await DUlst.delete()
-            DUlst = await Univers_list.get_or_none(id_out=id_del)
-            await DUlst.delete()
+            DUlst = await Univers_list.filter(id_in=id_del).all()
+            for d in DUlst:
+                await d.delete()
+            DUlst = await Univers_list.filter(id_out=id_del).all()
+            for d in DUlst:
+                await d.delete()
 
     tasks_lst = await Tasks.filter(title__icontains=FindTitle).values()
     tasks_lst1 = await Tasks.all()
@@ -316,7 +319,7 @@ async def VCardTask(request, task_id):
                 if lu:
                     return HttpResponse("Задачи уже связаны")
                 else:
-                    max_indx = await Univers_list.filter(id_out=vtask_id, role='arrow').annotate(max_s=Max("num_in_link")).values('max_s')
+                    max_indx = await Univers_list.filter(id_out=vtask_id, role='arrow').annotate(max_s=max("num_in_link")).values('max_s')
                     max_indx_int = max_indx[0]['max_s']
 
                     # print(max_indx)
