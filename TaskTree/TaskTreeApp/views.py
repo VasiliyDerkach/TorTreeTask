@@ -325,6 +325,7 @@ async def VCardTask(request, task_id):
                  'count_link_tasks': count_link_tasks,'count_unlink_tasks': count_unlink_tasks}
     await Tortoise.close_connections()
     return render(request,'card_task.html',context=info_task)
+
 """
     VContactsTask(request, task_id) - функция, вызывающая html шаблон, для страницы редактирования
     данных о взаимсвязях задачи с контактами, а также ролевым значение этой взаимосвязи.
