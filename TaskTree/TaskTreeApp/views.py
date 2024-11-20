@@ -133,6 +133,10 @@ async def MainPage(request):
         if id_del:
             DTsk = await Tasks.get_or_none(id=id_del)
             await DTsk.delete()
+            DUlst = await Univers_list.get_or_none(id_in=id_del)
+            await DUlst.delete()
+            DUlst = await Univers_list.get_or_none(id_out=id_del)
+            await DUlst.delete()
 
     tasks_lst = await Tasks.filter(title__icontains=FindTitle).values()
     tasks_lst1 = await Tasks.all()
@@ -162,6 +166,13 @@ async def PageContacts(request):
         if id_del:
             DCnt = await Contacts.get_or_none(id=id_del)
             await DCnt.delete()
+            DUlst = await Univers_list.filter(id_in=id_del).all()
+            for d in DUlst:
+                await d.delete()
+            DUlst = await Univers_list.filter(id_out=id_del).all()
+            for d in DUlst:
+                await d.delete()
+
 
     contacts_lst = await Contacts.filter(last_name__icontains=FindTitle).values()
     count_contacts = len(contacts_lst)
