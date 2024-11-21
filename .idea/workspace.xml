@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="84a20089-bd36-4d1c-b9a1-ba7083af52c7" name="Changes" comment="2011+">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaskTree/TaskTreeApp/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/TaskTree/TaskTreeApp/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaskTree/TaskTreeApp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/TaskTree/TaskTreeApp/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TaskTree/TaskTreeApp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/TaskTree/TaskTreeApp/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
